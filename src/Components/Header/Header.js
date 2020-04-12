@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     appBar : {
         background: '#2E3B55',
         borderBottom: `1px solid ${theme.palette.divider}`,
+
     },
 }));
 
@@ -28,7 +29,7 @@ export default function ButtonAppBar() {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" className={classes.appBar}>
+            <AppBar position="static" className={classes.appBar} >
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />

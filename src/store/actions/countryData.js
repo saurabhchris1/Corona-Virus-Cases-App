@@ -23,9 +23,10 @@ export const loadDataStart = (error) => {
     };
 };
 
-const createData = (country, total_death, deaths_today, total_confirmed) => {
-    return { country, total_death, deaths_today, total_confirmed };
+const createData = (code, name, totalCases, newCases, totalDeaths,  newDeaths, totalRecovered, critical, deathRate, casesPerMillion, latitude, longitude) => {
+    return { code, name, totalCases, newCases, totalDeaths,  newDeaths, totalRecovered, critical, deathRate, casesPerMillion, latitude, longitude};
 };
+
 
 
 export const loadData = () =>{
@@ -33,10 +34,12 @@ export const loadData = () =>{
     return dispatch => {
         dispatch(loadDataStart());
 
-        axios.get('/countries').then(response => {
+        axios.get('/countries', ).then(response => {
             const fetchedRows = []
             for (let key in response.data.data){
-                fetchedRows.push( createData(response.data.data[key].name, response.data.data[key].latest_data.deaths, response.data.data[key].today.deaths, response.data.data[key].latest_data.confirmed));
+                fetchedRows.push(createData(response.data.data[key].code, response.data.data[key].name, response.data.data[key].latest_data.confirmed, response.data.data[key].today.confirmed,
+                    response.data.data[key].latest_data.deaths,  response.data.data[key].today.deaths, response.data.data[key].latest_data.recovered, response.data.data[key].latest_data.critical,
+                    response.data.data[key].latest_data.calculated.death_rate, response.data.data[key].latest_data.calculated.cases_per_million_population, response.data.data[key].coordinates.latitude, response.data.data[key].coordinates.longitude) );
             }
             dispatch(loadDataSuccess(fetchedRows));
 

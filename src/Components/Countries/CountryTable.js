@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
+import Typography from '@material-ui/core/Typography';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -10,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
@@ -43,17 +46,23 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-
 const headCells = [
-    { id: 'country', numeric: false, disablePadding: false, label: 'Country' },
-    { id: 'total_death', numeric: true, disablePadding: false, label: 'Total Deaths' },
-    { id: 'deaths_today', numeric: true, disablePadding: false, label: 'New Deaths' },
-    { id: 'total_confirmed', numeric: true, disablePadding: false, label: 'Total Cases' },
+    { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
+    { id: 'totalCases', numeric: true, disablePadding: false, label: 'Total Cases' },
+    { id: 'newCases', numeric: true, disablePadding: false, label: 'New Cases' },
+    { id: 'totalDeaths', numeric: true, disablePadding: false, label: 'Total Deaths' },
+    { id: 'newDeaths', numeric: true, disablePadding: false, label: 'New Deaths' },
+    { id: 'totalRecovered', numeric: true, disablePadding: false, label: 'Total Recovered' },
+    { id: 'critical', numeric: true, disablePadding: false, label: 'Critical' },
+    { id: 'deathRate', numeric: true, disablePadding: false, label: 'Death Rate' },
+    { id: 'casesPerMillion', numeric: true, disablePadding: false, label: 'Cases Per Million' },
 
 ];
 
 
+
 function EnhancedTableHead(props) {
+
     const { classes, order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
@@ -97,6 +106,48 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
+
+const useToolbarStyles = makeStyles((theme) => ({
+    root: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(1),
+
+    },
+    highlight:
+        theme.palette.type === 'light'
+            ? {
+                color: theme.palette.secondary.main,
+                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+            }
+            : {
+                color: theme.palette.text.primary,
+                backgroundColor: theme.palette.secondary.dark,
+            },
+    title: {
+        flex: '1 1 100%',
+    },
+}));
+
+const EnhancedTableToolbar = (props) => {
+    const classes = useToolbarStyles();
+    const { numSelected } = props;
+
+    return (
+        <Toolbar
+            className={clsx(classes.root, {
+                [classes.highlight]: numSelected > 0,
+            })}>
+
+            <Typography className={classes.title} variant="h6" id="tableTitle" component="div" align="center">
+                Latest Covid-19 Updates
+            </Typography>
+
+
+
+        </Toolbar>
+    );
+};
+
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -132,7 +183,7 @@ const EnhancedTable = (props) => {
 
     const classes = useStyles();
     const [order, setOrder] = React.useState('desc');
-    const [orderBy, setOrderBy] = React.useState('total_confirmed');
+    const [orderBy, setOrderBy] = React.useState('totalCases');
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(25);
@@ -161,6 +212,7 @@ const EnhancedTable = (props) => {
 
         <div className={classes.root}>
             <Paper className={classes.paper}>
+                <EnhancedTableToolbar/>
                 <TableContainer>
                     <Table
                         className={classes.table}
@@ -184,12 +236,18 @@ const EnhancedTable = (props) => {
                                         <TableRow
                                             hover
                                             tabIndex={-1}
-                                            key={row.country}
+                                            key={row.code}
                                         >
-                                            <TableCell align="center">{row.country}</TableCell>
-                                            <TableCell align="center">{row.total_death}</TableCell>
-                                            <TableCell align="center">{row.deaths_today}</TableCell>
-                                            <TableCell align="center">{row.total_confirmed}</TableCell>
+                                            <TableCell align="center">{row.name}</TableCell>
+                                            <TableCell align="center">{row.totalCases}</TableCell>
+                                            <TableCell align="center">{row.newCases}</TableCell>
+                                            <TableCell align="center">{row.totalDeaths}</TableCell>
+                                            <TableCell align="center">{row.newDeaths}</TableCell>
+                                            <TableCell align="center">{row.totalRecovered}</TableCell>
+                                            <TableCell align="center">{row.critical}</TableCell>
+                                            <TableCell align="center">{row.deathRate.toFixed(2)}</TableCell>
+                                            <TableCell align="center">{row.casesPerMillion}</TableCell>
+
                                         </TableRow>
                                     );
                                 })}
@@ -211,10 +269,6 @@ const EnhancedTable = (props) => {
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
             </Paper>
-            <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label="Dense padding"
-            />
         </div>
     );
 
