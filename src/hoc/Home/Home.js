@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "../../Components/Header/Header";
-import {Grid} from "@material-ui/core";
-import Container from "@material-ui/core/Container";
+import CountryTable from "../../Components/Countries/CountryTable";
+import Container from '@material-ui/core/Container';
 import {makeStyles} from "@material-ui/core/styles";
+import {Grid} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -12,21 +12,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Layout = (props) =>{
+const Home = () =>{
+
     const classes = useStyles();
-    return(
-        <React.Fragment>
-            <Header/>
+
+
+    return(<React.Fragment>
             <Grid container spacing={3}>
                 <Grid item xs>
 
                     <Container className={classes.heroContent}>
-                        {props.children}
+                        <CountryTable/>
                     </Container>
                 </Grid>
             </Grid>
         </React.Fragment>
+
+
     );
 };
 
-export default Layout;
+export default Home;

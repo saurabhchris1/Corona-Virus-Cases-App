@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -12,11 +13,8 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import axios from '../../axios-data';
+import * as actions from '../../store/actions/index';
 
-const createData = (country, total_death, deaths_today, total_confirmed) => {
-    return { country, total_death, deaths_today, total_confirmed };
-};
 
 
 function descendingComparator(a, b, orderBy) {
@@ -123,25 +121,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function EnhancedTable() {
+const EnhancedTable = (props) => {
 
-    const [rows, setRows] = useState([{country: 'India', total_death: 11, deaths_today: 11, total_confirmed: 11}]);
 
     useEffect(() => {
+        props.onLoadData();
 
-        const fetchedRows = []
-        axios.get('/countries').then(response => {
-            for (let key in response.data.data){
-                fetchedRows.push( createData(response.data.data[key].name, response.data.data[key].latest_data.deaths, response.data.data[key].today.deaths, response.data.data[key].latest_data.confirmed));
-            }
-            setRows (fetchedRows);
-
-        }).catch(error => {
-            console.log('This is the error', error);
-            return error;
-        });
-
-    });
+    }, []);
 
 
     const classes = useStyles();
@@ -149,7 +135,7 @@ export default function EnhancedTable() {
     const [orderBy, setOrderBy] = React.useState('total_confirmed');
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(20);
+    const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -169,10 +155,10 @@ export default function EnhancedTable() {
     const handleChangeDense = (event) => {
         setDense(event.target.checked);
     };
-
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.rows.length - page * rowsPerPage);
 
     return (
+
         <div className={classes.root}>
             <Paper className={classes.paper}>
                 <TableContainer>
@@ -187,10 +173,10 @@ export default function EnhancedTable() {
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={props.rows.length}
                         />
                         <TableBody>
-                            {stableSort(rows, getComparator(order, orderBy))
+                            {stableSort(props.rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
 
@@ -218,7 +204,7 @@ export default function EnhancedTable() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={props.rows.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
@@ -232,4 +218,23 @@ export default function EnhancedTable() {
         </div>
     );
 
+
+
 }
+
+const mapStateToProps = state => {
+
+    return{
+        rows: state.countryData.rows,
+        loading: state.countryData.loading,
+
+    };
+};
+
+const mapDispatchToProps = dispatch =>{
+    return {
+        onLoadData: () => dispatch(actions.loadData())
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EnhancedTable);
