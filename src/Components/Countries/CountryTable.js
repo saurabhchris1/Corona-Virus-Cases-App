@@ -211,7 +211,7 @@ const EnhancedTable = (props) => {
     return (
 
         <div className={classes.root}>
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper} elevation={4}>
                 <EnhancedTableToolbar/>
                 <TableContainer>
                     <Table

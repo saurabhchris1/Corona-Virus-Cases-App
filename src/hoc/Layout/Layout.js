@@ -17,14 +17,9 @@ const Layout = (props) =>{
     return(
         <React.Fragment>
             <Header/>
-            <Grid container spacing={3}>
-                <Grid item xs>
 
-                    <Container className={classes.heroContent}>
-                        {props.children}
-                    </Container>
-                </Grid>
-            </Grid>
+            {props.children}
+
         </React.Fragment>
     );
 };
