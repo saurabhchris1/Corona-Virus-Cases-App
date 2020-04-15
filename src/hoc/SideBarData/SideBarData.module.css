@@ -1,0 +1,8 @@
+.areaDiv {
+    display: flex;
+    align-items: center;
+}
+
+.areaDiv:not(:last-child) {
+    margin-bottom: 12px;
+}

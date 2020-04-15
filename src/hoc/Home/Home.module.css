@@ -1,0 +1,28 @@
+.tab {
+    width: auto;
+    padding: 24px 24px 0 24px;
+    box-sizing: border-box;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.05);
+    z-index: 201;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+.areas {
+    padding: 24px;
+    width: 100%;
+    margin-left: -24px;
+    overflow-y: scroll;
+}
+
+.paper {
+
+    height: 100%;
+    z-index: 1200;
+    position: fixed;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}

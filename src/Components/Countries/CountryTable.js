@@ -1,24 +1,14 @@
-import React, { useEffect } from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import React  from 'react';
+import {makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import Typography from '@material-ui/core/Typography';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import * as actions from '../../store/actions/index';
-
-
+import EnhancedTableHead from "./Enhanched Table/EnhancedTableHead";
+import EnhanchedTableToolbar from "./Enhanched Table/EnhanchedTableToolbar";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -46,107 +36,6 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-    { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
-    { id: 'totalCases', numeric: true, disablePadding: false, label: 'Total Cases' },
-    { id: 'newCases', numeric: true, disablePadding: false, label: 'New Cases' },
-    { id: 'totalDeaths', numeric: true, disablePadding: false, label: 'Total Deaths' },
-    { id: 'newDeaths', numeric: true, disablePadding: false, label: 'New Deaths' },
-    { id: 'totalRecovered', numeric: true, disablePadding: false, label: 'Total Recovered' },
-    { id: 'critical', numeric: true, disablePadding: false, label: 'Critical' },
-    { id: 'deathRate', numeric: true, disablePadding: false, label: 'Death Rate' },
-    { id: 'casesPerMillion', numeric: true, disablePadding: false, label: 'Cases Per Million' },
-
-];
-
-
-
-function EnhancedTableHead(props) {
-
-    const { classes, order, orderBy, onRequestSort } = props;
-    const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property);
-    };
-
-    return (
-        <TableHead>
-            <TableRow>
-
-                {headCells.map((headCell) => (
-                    <TableCell
-                        key={headCell.id}
-                        align={'center'}
-                        padding={headCell.disablePadding ? 'none' : 'default'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                        <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
-                        >
-                            {headCell.label}
-                            {orderBy === headCell.id ? (
-                                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-                            ) : null}
-                        </TableSortLabel>
-                    </TableCell>
-                ))}
-            </TableRow>
-        </TableHead>
-    );
-}
-
-EnhancedTableHead.propTypes = {
-    classes: PropTypes.object.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
-};
-
-
-const useToolbarStyles = makeStyles((theme) => ({
-    root: {
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(1),
-
-    },
-    highlight:
-        theme.palette.type === 'light'
-            ? {
-                color: theme.palette.secondary.main,
-                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-            }
-            : {
-                color: theme.palette.text.primary,
-                backgroundColor: theme.palette.secondary.dark,
-            },
-    title: {
-        flex: '1 1 100%',
-    },
-}));
-
-const EnhancedTableToolbar = (props) => {
-    const classes = useToolbarStyles();
-    const { numSelected } = props;
-
-    return (
-        <Toolbar
-            className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}>
-
-            <Typography className={classes.title} variant="h6" id="tableTitle" component="div" align="center">
-                Latest Covid-19 Updates
-            </Typography>
-
-
-
-        </Toolbar>
-    );
-};
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -154,10 +43,10 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         width: '100%',
-        marginBottom: theme.spacing(2),
+        marginBottom: theme.spacing(0),
     },
     table: {
-        minWidth: 750,
+        minWidth: "100%",
     },
     visuallyHidden: {
         border: 0,
@@ -173,13 +62,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EnhancedTable = (props) => {
-
-
-    useEffect(() => {
-        props.onLoadData();
-
-    }, []);
-
 
     const classes = useStyles();
     const [order, setOrder] = React.useState('desc');
@@ -203,16 +85,33 @@ const EnhancedTable = (props) => {
         setPage(0);
     };
 
-    const handleChangeDense = (event) => {
-        setDense(event.target.checked);
+    const createData = (code, name, totalCases) => {
+        return { code, name, totalCases};
     };
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.rows.length - page * rowsPerPage);
+
+    const rows = []
+    const tempData = props.rows;
+    console.log(tempData[0])
+    for (let key in tempData){
+        rows.push(createData(tempData[key].code, tempData[key].name, tempData[key].latest_data.confirmed) );
+    }
+
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+    const headCells = [];
+
+    for (let key in props.headCells){
+       headCells.push({ id: props.headCells[key].name, numeric: false, disablePadding: false, label: props.headCells[key].label});
+
+    }
+
+
 
     return (
 
         <div className={classes.root}>
             <Paper className={classes.paper} elevation={4}>
-                <EnhancedTableToolbar/>
+                <EnhanchedTableToolbar/>
                 <TableContainer>
                     <Table
                         className={classes.table}
@@ -221,14 +120,14 @@ const EnhancedTable = (props) => {
                         aria-label="enhanced table"
                     >
                         <EnhancedTableHead
-                            classes={classes}
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
-                            rowCount={props.rows.length}
+                            rowCount={rows.length}
+                            headCells={headCells}
                         />
                         <TableBody>
-                            {stableSort(props.rows, getComparator(order, orderBy))
+                            {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
 
@@ -237,16 +136,11 @@ const EnhancedTable = (props) => {
                                             hover
                                             tabIndex={-1}
                                             key={row.code}
+                                            onClick={() => props.clickHandler(row.code)}
                                         >
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center">{row.totalCases}</TableCell>
-                                            <TableCell align="center">{row.newCases}</TableCell>
-                                            <TableCell align="center">{row.totalDeaths}</TableCell>
-                                            <TableCell align="center">{row.newDeaths}</TableCell>
-                                            <TableCell align="center">{row.totalRecovered}</TableCell>
-                                            <TableCell align="center">{row.critical}</TableCell>
-                                            <TableCell align="center">{row.deathRate.toFixed(2)}</TableCell>
-                                            <TableCell align="center">{row.casesPerMillion}</TableCell>
+
 
                                         </TableRow>
                                     );
@@ -262,7 +156,7 @@ const EnhancedTable = (props) => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={props.rows.length}
+                    count={rows.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
@@ -272,23 +166,6 @@ const EnhancedTable = (props) => {
         </div>
     );
 
-
-
 }
 
-const mapStateToProps = state => {
-
-    return{
-        rows: state.countryData.rows,
-        loading: state.countryData.loading,
-
-    };
-};
-
-const mapDispatchToProps = dispatch =>{
-    return {
-        onLoadData: () => dispatch(actions.loadData())
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EnhancedTable);
+export default EnhancedTable;
