@@ -75,11 +75,11 @@ const Home = (props) =>{
     return(
         <React.Fragment>
             <Grid container spacing={0}>
-                <Grid item xs={3}>
+                <Grid item xs={12} sm={3}>
                     <EnhancedTable clickHandler={onRowClickHandler} headCells={headCells} rows={props.rows}/>
                 </Grid>
 
-                <Grid item xs={9}>
+                <Grid item xs={12} sm={9}>
 
                     <InfoPaper data={infoData}/>
 

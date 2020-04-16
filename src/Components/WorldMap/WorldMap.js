@@ -21,9 +21,9 @@ const WorldMap = (props) => {
 
     const classes = useStyles();
     const [viewport, setViewport] = useState({
-        latitude: 37.78,
-        longitude: -122.41,
-        zoom: 1,
+        latitude: 28,
+        longitude: 3,
+        zoom: 2,
         bearing: 0,
         pitch: 0,
         width: '100%',
@@ -45,7 +45,10 @@ const WorldMap = (props) => {
         }
         return true;
     }).map((country) => {
-        const finalValue =  country.latest_data.confirmed === 0 ? 0 : (( Math.log(country.latest_data.confirmed) / Math.log(props.totalCasesCalculated)) * 55) + 5
+        // const finalValue =  country.latest_data.confirmed === 0 ? 0 : (( Math.log(country.latest_data.confirmed) / Math.log(props.totalCasesCalculated)) * 55) + 5
+        // const finalValue =  ( Math.pow(country.latest_data.confirmed, 1.001) / Math.pow(props.totalCasesCalculated, 1.001) ) * 45+5;
+        const finalValue =  country.latest_data.confirmed === 0 ? 0 : 60-55 * ( Math.exp(-5*(country.latest_data.confirmed) / (props.totalCasesCalculated) ) )
+
         const pWidth = finalValue.toString() + 'px';
         const pHeight = finalValue.toString() + 'px';
 
