@@ -91,7 +91,6 @@ const EnhancedTable = (props) => {
 
     const rows = []
     const tempData = props.rows;
-    console.log(tempData[0])
     for (let key in tempData){
         rows.push(createData(tempData[key].code, tempData[key].name, tempData[key].latest_data.confirmed) );
     }

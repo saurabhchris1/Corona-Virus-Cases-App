@@ -1,20 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, { useState} from "react";
 import MapGL,{Marker, Popup} from 'react-map-gl';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from "@material-ui/core/Paper";
+import classesWp from './WorldMap.module.css';
 
 const MAPBOX_TOKEN = 'pk.eyJ1Ijoic2F1cmFiaGNocmlzMSIsImEiOiJjazVuMm5yMzcwOGczM2pxaGI4ZHE0Mjk4In0.-fxmOIhLETOYkYPy_6E1bg';
 
 const useStyles = makeStyles((theme) => ({
-    shape: {
-        backgroundColor: "rgba(230, 0, 0, 0.54)",
-        width: 40,
-        height: 40,
-    },
-    shapeCircle: {
-        borderRadius: '50%',
-    },
     paper: {
         width: '100%',
         height: '100%',
@@ -22,11 +14,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
+
 const WorldMap = (props) => {
     // const [toolTip, setToolTip] = useState({showPopup: true});
 
     const classes = useStyles();
-    const circle = <div className={clsx(classes.shape, classes.shapeCircle)} />;
     const [viewport, setViewport] = useState({
         latitude: 37.78,
         longitude: -122.41,
@@ -37,21 +30,33 @@ const WorldMap = (props) => {
         height: '100%',
     });
 
-    const [popup, setPopup] = useState({showPopup: true});
+
+
+
+    const [popup, setPopup] = useState({showPopup: false, latitude: 0, longitude:0, country: 'USA', totalCases: 100, totalDeaths: 100, newCases: 100, newDeaths: 100});
+
+    const onMarkerClickHandler = (latitude, longitude,  name, totalCases, totalDeaths, newCases, newDeaths) => {
+        setPopup({showPopup: true, latitude: latitude, longitude:longitude, country: name, totalCases: totalCases, totalDeaths: totalDeaths, newCases: newCases, newDeaths: newDeaths});
+    }
 
     const mapMarker = props.data.filter((country)=> {
-        if (country.coordinates.latitude === null || country.coordinates.longitude === null) {
+        if ((country.coordinates.latitude === null || country.coordinates.longitude === null) || (country.coordinates.latitude === 0 || country.coordinates.longitude === 0)) {
             return false; // skip
         }
         return true;
     }).map((country) => {
+        const finalValue =  country.latest_data.confirmed === 0 ? 0 : (( Math.log(country.latest_data.confirmed) / Math.log(props.totalCasesCalculated)) * 55) + 5
+        const pWidth = finalValue.toString() + 'px';
+        const pHeight = finalValue.toString() + 'px';
+
         return (
 
             <Marker latitude={country.coordinates.latitude} longitude={country.coordinates.longitude} offsetLeft={-20}
-                    offsetTop={-10} key={country.code}>
+                    offsetTop={-10} key={country.code}  anchor="bottom">
 
-                {circle}
-
+                <div className={classesWp.marker} style={{backgroundColor: "rgba(230,0,0,0.54)", width: pWidth, height: pHeight, borderRadius: '50%'}}
+                     onClick={() => onMarkerClickHandler(country.coordinates.latitude, country.coordinates.longitude, country.name,
+                          country.latest_data.confirmed, country.latest_data.deaths, country.today.confirmed, country.today.deaths)}></div>
             </Marker>
 
         );
@@ -68,13 +73,42 @@ const WorldMap = (props) => {
 
         {mapMarker}
             {popup.showPopup && <Popup
-                latitude={37.78}
-                longitude={-122.41}
+                latitude={popup.latitude}
+                longitude={popup.longitude}
                 closeButton={true}
-                closeOnClick={false}
+                closeOnClick={true}
                 onClose={() => setPopup({showPopup: false})}
-                anchor="top" >
-                <div>You are here</div>
+                anchor="bottom"
+                dynamicPosition={false}
+            >
+                <div>
+                    <div className={classesWp.topToolTip} >
+                        <div className={classesWp.titleInfoBox}>{popup.country}</div>
+                        <div className={classesWp.statLine}>
+                            <div className={classesWp.stat} style={{color: '#DE3700'}}>Total cases</div>
+                            <div className={classesWp.statCount}>{popup.totalCases}</div>
+                        </div>
+                        <div className={classesWp.divider}></div>
+                        <div className={classesWp.statLine}>
+                            <div className={classesWp.legendColor} style={{backgroundColor: '#F4C363'}}></div>
+                            <div className={classesWp.stat}>Total Deaths</div>
+                            <div className={classesWp.statCount}>{popup.totalDeaths}</div>
+                        </div>
+                        <div className={classesWp.statLine}>
+                            <div className={classesWp.legendColor} style={{backgroundColor: '#60BB69'}}></div>
+                            <div className={classesWp.stat}>Cases Today</div>
+                            <div className={classesWp.statCount}>{popup.newCases}</div>
+                        </div>
+                        <div className={classesWp.statLine}>
+                            <div className={classesWp.legendColor} style={{backgroundColor: '#767676'}}></div>
+                            <div className={classesWp.stat}>Deaths Today</div>
+                            <div className={classesWp.statCount}>{popup.newDeaths}</div>
+                        </div>
+                        <i></i>
+                    </div>
+
+                </div>
+
             </Popup>}
 
         </MapGL>

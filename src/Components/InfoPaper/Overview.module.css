@@ -10,7 +10,7 @@
     overflow: hidden;
     padding: 4px 0 6px 0;
     display: block;
-    width: 320px;
+    width: 340px;
     z-index: 1;
 }
 
@@ -56,4 +56,14 @@
     color: #767676;
     display: flex;
     align-items: center;
+}
+
+.overview {
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    padding: 8px 12px 12px 12px;
+    border-bottom: none;
+    margin-bottom: 24px;
 }

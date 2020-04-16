@@ -16,6 +16,7 @@ const Home = (props) =>{
         props.onLoadData();
         onRowClickHandler('US');
 
+
     }, []);
 
 
@@ -64,7 +65,13 @@ const Home = (props) =>{
 
     }
 
+    let tempData = 0;
+    for (let key in props.rows){
+        if (props.rows[key].latest_data.confirmed > tempData){
+            tempData = props.rows[key].latest_data.confirmed
+        }
 
+    }
     return(
         <React.Fragment>
             <Grid container spacing={0}>
@@ -75,7 +82,8 @@ const Home = (props) =>{
                 <Grid item xs={9}>
 
                     <InfoPaper data={infoData}/>
-                    <WorldMap data={props.rows}/>
+
+                    <WorldMap data={props.rows} totalCasesCalculated ={tempData}/>
 
                 </Grid>
 

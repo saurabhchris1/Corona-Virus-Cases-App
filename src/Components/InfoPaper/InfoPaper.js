@@ -1,10 +1,28 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import classes from './Overview.module.css';
-
+import InfoPaperChart from "../Charts/InfoPaperChart";
 
 const InfoPaper = (props) => {
+    const createDataDaily = (date, deaths, confirmed) => {
+        return { date, deaths, confirmed};
+    };
+    const createDataToday = (date, new_deaths, new_confirmed) => {
+        return { date, new_deaths, new_confirmed};
+    };
+    const chartDataDaily = [];
+
+    for (let key in props.data.data.data.timeline){
+        chartDataDaily.push(createDataDaily(props.data.data.data.timeline[key].date, props.data.data.data.timeline[key].deaths, props.data.data.data.timeline[key].confirmed));
+    }
+
+    const chartDataToday = [];
+
+    for (let key in props.data.data.data.timeline){
+        chartDataToday.push(createDataToday(props.data.data.data.timeline[key].date, props.data.data.data.timeline[key].new_deaths, props.data.data.data.timeline[key].new_confirmed));
+    }
+
+
     return (
 
         <div className={classes.InfoPaper}>
@@ -12,7 +30,7 @@ const InfoPaper = (props) => {
                 <Typography component="p" variant="h6" className={classes.type}>
                     Overview - {props.data.data.data.name}
                 </Typography>
-                <Paper elevation={2} >
+                <div className={classes.overview}>
                     <div className={classes.infoTitle}>
                         <Typography variant="subtitle2" className={classes.Title}>
                             Total Cases
@@ -50,7 +68,7 @@ const InfoPaper = (props) => {
                           <h2 className={classes.legend}>
                               <div className={classes.color} style={{background: "green"}}></div>
                               <div className={classes.description}>Death Rate</div>
-                              <div className={classes.total}>{props.data.data.data.latest_data.calculated.death_rate.toFixed(2)}</div>
+                              <div className={classes.total}>{props.data.data.data.latest_data.calculated.death_rate === null ? 0 : props.data.data.data.latest_data.calculated.death_rate.toFixed(2)}</div>
                           </h2>
                           <h2 className={classes.legend}>
                               <div className={classes.color} style={{background: "blue"}}></div>
@@ -61,7 +79,18 @@ const InfoPaper = (props) => {
 
                     </div>
 
-                </Paper>
+                </div>
+                <Typography variant="subtitle1" className={classes.Title} style={{paddingBottom: "2px", paddingTop:"4px"}}>
+                    Chart
+                </Typography>
+              <div className={classes.overview} style={{height: 'calc(100% - 900px)'}}>
+                  <InfoPaperChart lineOneName='Total Deaths' lineTwoName='Total Cases' data={chartDataDaily} x='date' lineOne='deaths' lineTwo='confirmed'/>
+
+              </div>
+                <div className={classes.overview} style={{height: 'calc(100% - 900px)'}}>
+                    <InfoPaperChart lineOneName='Daily Deaths' lineTwoName='Daily Cases' data={chartDataToday} x='date' lineOne='new_deaths' lineTwo='new_confirmed'/>
+
+                </div>
 
             </div>
 
