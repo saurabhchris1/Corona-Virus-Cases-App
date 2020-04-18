@@ -7,9 +7,12 @@ The API used is https://about-corona.net availbe to use for free.
 
 ## Installation
 
-### Create the Mapbox account and get the Mapbox token. 
+``` 
+Create the Mapbox account and get the Mapbox token. 
 (https://docs.mapbox.com/help/how-mapbox-works/access-tokens/)
 
-### Clone the repo and rename the TestMapboxID.js to MapboxID.js and add your mapbox token.
+Clone the repo and rename the TestMapboxID.js to MapboxID.js and add your mapbox token.
 
-### and you are ready to go by using npm start.
+and you are ready to go by using npm start.
+
+```
