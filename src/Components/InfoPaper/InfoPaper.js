@@ -43,14 +43,13 @@ const InfoPaper = (props) => {
                           <h2 className={classes.legend}>
                               <div className={classes.color} style={{background: "red"}}></div>
                               <div className={classes.description}>New Cases</div>
-                              <div className={classes.total}>{props.data.data.data.today.confirmed}
-                                  <div className={classes.delta}>+28,339</div></div>
+                              <div className={classes.total}>{props.data.data.data.today.confirmed}</div>
                           </h2>
                           <h2 className={classes.legend}>
                               <div className={classes.color} style={{background: "green"}}></div>
                               <div className={classes.description}>Deaths</div>
                               <div className={classes.total}>{props.data.data.data.latest_data.deaths}
-                                  <div className={classes.delta}>{props.data.data.data.today.deaths}</div></div>
+                                  <div className={classes.delta}>+{props.data.data.data.today.deaths}</div></div>
                           </h2>
                           <h2 className={classes.legend}>
                               <div className={classes.color} style={{background: "blue"}}></div>

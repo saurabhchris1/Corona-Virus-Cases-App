@@ -130,7 +130,6 @@ const Home = (props) =>{
     }
     const classStyle = useStyles();
     let outScreen = null;
-    console.log(windowSize.windowWith);
     if (windowSize.windowWith >= 1024) {
          outScreen =  (<div className={classStyle.root}>
              <CssBaseline />

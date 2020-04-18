@@ -5,8 +5,6 @@ import {Grid} from "@material-ui/core";
 
 const InfoPaperGlobal = (props) => {
 
-    console.log(props.data.active)
-
 
     return (
 <div className={classes.InfoPaper}>
