@@ -1,24 +1,70 @@
 import React, {useState, useEffect} from "react";
 import EnhancedTable from "../../Components/Countries/CountryTable";
-import {Grid} from "@material-ui/core";
+import {Grid, Paper} from "@material-ui/core";
 import WorldMap from "../../Components/WorldMap/WorldMap";
 import InfoPaper from "../../Components/InfoPaper/InfoPaper";
 import axios from '../../axios-data';
 import {connect} from 'react-redux';
 import * as actions from '../../store/actions/index';
-
+import InfoPaperGlobal from "../../Components/InfoPaper/InfoPaperGlobal";
+import classes from './Home.module.css';
+import Header from "../../Components/Header/Header";
+import Drawer from '@material-ui/core/Drawer';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from "@material-ui/core/Typography";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { makeStyles } from '@material-ui/core/styles';
+import MobileMenu from "../../Components/MobileMenu/MobileMenu";
 
 
 const headCells = [{name: 'name', label: 'Name'}, {name:'totalCases', label: 'Total Cases'}];
+const drawerWidth = 320;
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+    },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+    drawerPaper: {
+        width: drawerWidth,
+    },
+    drawerContainer: {
+        overflow: 'auto',
+    },
+    content: {
+        flexGrow: 1
+    },
+}));
+
 
 const Home = (props) =>{
+
     useEffect(() => {
         props.onLoadData();
         onRowClickHandler('US');
+        globalTimeline();
 
+        setWindowSize({ windowWith: window.innerWidth });
 
     }, []);
 
+    const [globalInfo, setGlobalInfo] = useState({data:{
+            "updated_at": "",
+            "date": "2020-04-17",
+            "deaths": 148814,
+            "confirmed": 2206311,
+            "recovered": 557656,
+            "active": 1499841,
+            "new_confirmed": 55293,
+            "new_recovered": 16337,
+            "new_deaths": 5043,
+            "is_in_progress": true
+        }});
 
     const [infoData, setInfoData] = useState({data: {
             "data": {
@@ -51,7 +97,7 @@ const Home = (props) =>{
             "_cacheHit": true
         }});
 
-
+    const [windowSize, setWindowSize] = useState({windowWith: window.innerWidth});
 
     const onRowClickHandler = (countryCode) => {
 
@@ -65,6 +111,16 @@ const Home = (props) =>{
 
     }
 
+    const globalTimeline = () => {
+        axios.get('/timeline' ).then(response => {
+
+            setGlobalInfo({data: response.data.data[0]});
+
+        }).catch(error => {
+            return error;
+        });
+    }
+
     let tempData = 0;
     for (let key in props.rows){
         if (props.rows[key].latest_data.confirmed > tempData){
@@ -72,22 +128,66 @@ const Home = (props) =>{
         }
 
     }
+    const classStyle = useStyles();
+    let outScreen = null;
+    console.log(windowSize.windowWith);
+    if (windowSize.windowWith >= 1024) {
+         outScreen =  (<div className={classStyle.root}>
+             <CssBaseline />
+             <Header/>
+             <Drawer
+                 className={classStyle.drawer}
+                 variant="permanent"
+                 classes={{
+                     paper: classStyle.drawerPaper,
+                 }}
+             >
+                 <Toolbar />
+                 <div className={classStyle.drawerContainer}>
+
+                     <InfoPaperGlobal data={globalInfo.data}/>
+
+                     <EnhancedTable clickHandler={onRowClickHandler} headCells={headCells} rows={props.rows}/>
+
+                 </div>
+             </Drawer>
+             <main className={classStyle.content}>
+
+                 <Toolbar/>
+                 <InfoPaper data={infoData}/>
+
+                 <WorldMap data={props.rows} totalCasesCalculated ={tempData}/>
+
+             </main>
+
+
+         </div>);
+
+    } else{
+         outScreen =   (
+             <div className={classes.MobileRoot}>
+            <Header/>
+            <div className={classes.WorldMap}>
+                <WorldMap data={props.rows} totalCasesCalculated ={tempData}/>
+            </div>
+                <div className={classes.MobileMenu}>
+                    <Grid container  >
+                        <Grid item xs={12}>
+
+                            <MobileMenu infoPaper={infoData} infoPaperGlobal={globalInfo.data} enhanchedTableHeadCells={headCells} enhanchedTableRows={props.rows} clickHandler={onRowClickHandler} />
+                        </Grid>
+                    </Grid>
+                </div>
+
+
+        </div>);
+    }
+
+
+
     return(
         <React.Fragment>
-            <Grid container spacing={0}>
-                <Grid item xs={12} sm={3}>
-                    <EnhancedTable clickHandler={onRowClickHandler} headCells={headCells} rows={props.rows}/>
-                </Grid>
-
-                <Grid item xs={12} sm={9}>
-
-                    <InfoPaper data={infoData}/>
-
-                    <WorldMap data={props.rows} totalCasesCalculated ={tempData}/>
-
-                </Grid>
-
-            </Grid>
+            {outScreen}
 
 
         </React.Fragment>

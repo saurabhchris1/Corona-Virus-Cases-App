@@ -1,6 +1,4 @@
 .InfoPaper{
-    position: absolute;
-    margin: 24px;
     height: calc(100% - 200px);
     box-sizing: border-box;
     background: #FFFFFF;
@@ -10,7 +8,6 @@
     overflow: hidden;
     padding: 4px 0 6px 0;
     display: block;
-    width: 340px;
     z-index: 1;
 }
 

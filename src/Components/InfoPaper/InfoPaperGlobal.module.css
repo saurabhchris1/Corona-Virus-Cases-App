@@ -1,0 +1,29 @@
+.InfoPaper{
+    padding: 24px;
+}
+
+.legend {
+    display: grid;
+    padding-top: 16px;
+    grid-template-columns: 8px auto min-content;
+    align-items: center;
+    grid-gap: 16px 8px;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.legend .color {
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+}
+
+.legend .description {
+    font-weight: 600;
+}
+
+.legend .total {
+    color: #767676;
+    display: flex;
+    align-items: center;
+}

@@ -23,11 +23,11 @@ const WorldMap = (props) => {
     const [viewport, setViewport] = useState({
         latitude: 28,
         longitude: 3,
-        zoom: 2,
+        zoom: 0,
         bearing: 0,
         pitch: 0,
         width: '100%',
-        height: '100%',
+        height: '100vh',
     });
 
 
@@ -47,7 +47,7 @@ const WorldMap = (props) => {
     }).map((country) => {
         // const finalValue =  country.latest_data.confirmed === 0 ? 0 : (( Math.log(country.latest_data.confirmed) / Math.log(props.totalCasesCalculated)) * 55) + 5
         // const finalValue =  ( Math.pow(country.latest_data.confirmed, 1.001) / Math.pow(props.totalCasesCalculated, 1.001) ) * 45+5;
-        const finalValue =  country.latest_data.confirmed === 0 ? 0 : 60-55 * ( Math.exp(-5*(country.latest_data.confirmed) / (props.totalCasesCalculated) ) )
+        const finalValue =  country.latest_data.confirmed === 0 ? 0 : 60-50 * ( Math.exp(-5*(country.latest_data.confirmed) / (props.totalCasesCalculated) ) )
 
         const pWidth = finalValue.toString() + 'px';
         const pHeight = finalValue.toString() + 'px';

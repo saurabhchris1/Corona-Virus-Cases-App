@@ -27,7 +27,7 @@ const InfoPaper = (props) => {
 
         <div className={classes.InfoPaper}>
             <div className={classes.overviewContent}>
-                <Typography component="p" variant="h6" className={classes.type}>
+                <Typography  variant="subtitle1" className={classes.type}>
                     Overview - {props.data.data.data.name}
                 </Typography>
                 <div className={classes.overview}>
@@ -38,38 +38,26 @@ const InfoPaper = (props) => {
                         <Typography variant="h4" style={{color: "rgb(244, 195, 99)"}}>
                             {props.data.data.data.latest_data.confirmed}
                         </Typography>
-                        <Typography variant="subtitle2" className={classes.Title}>
-                            Total Deaths
-                        </Typography>
-                        <Typography variant="h4" style={{color: "#DE3700"}}>
-                            {props.data.data.data.latest_data.deaths}
-                        </Typography>
+
                       <div>
                           <h2 className={classes.legend}>
                               <div className={classes.color} style={{background: "red"}}></div>
                               <div className={classes.description}>New Cases</div>
-                              <div className={classes.total}>{props.data.data.data.today.confirmed}</div>
+                              <div className={classes.total}>{props.data.data.data.today.confirmed}
+                                  <div className={classes.delta}>+28,339</div></div>
                           </h2>
                           <h2 className={classes.legend}>
                               <div className={classes.color} style={{background: "green"}}></div>
-                              <div className={classes.description}>New Deaths</div>
-                              <div className={classes.total}>{props.data.data.data.today.deaths}</div>
+                              <div className={classes.description}>Deaths</div>
+                              <div className={classes.total}>{props.data.data.data.latest_data.deaths}
+                                  <div className={classes.delta}>{props.data.data.data.today.deaths}</div></div>
                           </h2>
                           <h2 className={classes.legend}>
                               <div className={classes.color} style={{background: "blue"}}></div>
                               <div className={classes.description}>Total Recovered</div>
                               <div className={classes.total}>{props.data.data.data.latest_data.recovered}</div>
                           </h2>
-                          <h2 className={classes.legend}>
-                              <div className={classes.color} style={{background: "red"}}></div>
-                              <div className={classes.description}>Critical</div>
-                              <div className={classes.total}>{props.data.data.data.latest_data.critical}</div>
-                          </h2>
-                          <h2 className={classes.legend}>
-                              <div className={classes.color} style={{background: "green"}}></div>
-                              <div className={classes.description}>Death Rate</div>
-                              <div className={classes.total}>{props.data.data.data.latest_data.calculated.death_rate === null ? 0 : props.data.data.data.latest_data.calculated.death_rate.toFixed(2)}</div>
-                          </h2>
+
                           <h2 className={classes.legend}>
                               <div className={classes.color} style={{background: "blue"}}></div>
                               <div className={classes.description}>Cases Per Million</div>
@@ -83,11 +71,11 @@ const InfoPaper = (props) => {
                 <Typography variant="subtitle1" className={classes.Title} style={{paddingBottom: "2px", paddingTop:"4px"}}>
                     Chart
                 </Typography>
-              <div className={classes.overview} style={{height: 'calc(100% - 900px)'}}>
+              <div className={classes.overview} style={{height: '200px'}}>
                   <InfoPaperChart lineOneName='Total Deaths' lineTwoName='Total Cases' data={chartDataDaily} x='date' lineOne='deaths' lineTwo='confirmed'/>
 
               </div>
-                <div className={classes.overview} style={{height: 'calc(100% - 900px)'}}>
+                <div className={classes.overview} style={{height: '200px'}}>
                     <InfoPaperChart lineOneName='Daily Deaths' lineTwoName='Daily Cases' data={chartDataToday} x='date' lineOne='new_deaths' lineTwo='new_confirmed'/>
 
                 </div>
