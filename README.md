@@ -4,6 +4,7 @@ This web app is based on ReactJS - Redux - Material UI - Mapbox - Recharts.
 
 The API used is https://about-corona.net availbe to use for free.
 
+Inspired by Microsoft's Bing Covid Tracker.  
 
 ## Installation
 
