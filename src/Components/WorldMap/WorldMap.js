@@ -3,8 +3,9 @@ import MapGL,{Marker, Popup} from 'react-map-gl';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from "@material-ui/core/Paper";
 import classesWp from './WorldMap.module.css';
+import * as mapboxToken from '../../MapboxID';
 
-const MAPBOX_TOKEN = 'pk.eyJ1Ijoic2F1cmFiaGNocmlzMSIsImEiOiJjazVuMm5yMzcwOGczM2pxaGI4ZHE0Mjk4In0.-fxmOIhLETOYkYPy_6E1bg';
+const MAPBOX_TOKEN = mapboxToken.mapBoxID;
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -37,6 +38,11 @@ const WorldMap = (props) => {
 
     const onMarkerClickHandler = (latitude, longitude,  name, totalCases, totalDeaths, newCases, newDeaths) => {
         setPopup({showPopup: true, latitude: latitude, longitude:longitude, country: name, totalCases: totalCases, totalDeaths: totalDeaths, newCases: newCases, newDeaths: newDeaths});
+
+        setTimeout(() =>(
+            setPopup({showPopup: false})
+        ), 3000);
+
     }
 
     const mapMarker = props.data.filter((country)=> {

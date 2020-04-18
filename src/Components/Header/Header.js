@@ -4,7 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import AcUnitIcon from '@material-ui/icons/AcUnit';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,10 +31,10 @@ export default function ButtonAppBar() {
             <AppBar position="fixed" className={classes.appBar} >
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <MenuIcon />
+                        <AcUnitIcon/>
                     </IconButton>
                     <Typography variant="h6"  className={classes.title}>
-                        Covid-19 World Map
+                        Covid-19 World Tracker
                     </Typography>
 
                 </Toolbar>
