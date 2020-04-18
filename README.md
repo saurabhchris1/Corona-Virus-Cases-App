@@ -13,6 +13,8 @@ Create the Mapbox account and get the Mapbox token.
 
 Clone the repo and rename the TestMapboxID.js to MapboxID.js and add your mapbox token.
 
-and you are ready to go by using npm start.
+run npm install.
+
+Now you can run this app using npm start. Enjoy!
 
 ```
