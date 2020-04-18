@@ -1,1 +1,0 @@
-export const mapBoxID = 'pk.eyJ1Ijoic2F1cmFiaGNocmlzMSIsImEiOiJjazVuMm5yMzcwOGczM2pxaGI4ZHE0Mjk4In0.-fxmOIhLETOYkYPy_6E1bg';
